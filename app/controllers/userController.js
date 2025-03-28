@@ -47,7 +47,9 @@ exports.adminRegister = async (req, res, next) => {
       role: newRole,
     });
 
-    res.status(201).json({ message: "Đăng ký thành công", user: newUser });
+    res
+      .status(201)
+      .json({ success: true, message: "Đăng ký thành công", user: newUser });
   } catch (error) {
     next(error);
   }
@@ -80,7 +82,9 @@ exports.register = async (req, res, next) => {
       role: "client", // Mặc định role là client
     });
 
-    res.status(201).json({ message: "Đăng ký thành công", user: newUser });
+    res
+      .status(201)
+      .json({ success: true, message: "Đăng ký thành công", user: newUser });
   } catch (error) {
     next(error);
   }
@@ -99,7 +103,7 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign({ id: user.id, role: user.role }, env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.json({ message: "Đăng nhập thành công", token, user });
+    res.json({ success: true, message: "Đăng nhập thành công", token, user });
   } catch (error) {
     next(error);
   }
@@ -112,7 +116,7 @@ exports.getCurrentUser = async (req, res, next) => {
       attributes: { exclude: ["password"] },
     });
     if (!user) return next(new ApiError(404, "Người dùng không tồn tại."));
-    res.json(user);
+    res.json({ success: true, user });
   } catch (error) {
     next(error);
   }
@@ -129,7 +133,7 @@ exports.getUsersByRole = async (req, res, next) => {
       where: { role },
       attributes: { exclude: ["password"] },
     });
-    res.json(users);
+    res.json({ success: true, users });
   } catch (error) {
     next(error);
   }

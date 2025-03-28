@@ -14,7 +14,7 @@ app.use(express.urlencoded({ extended: true })); // Xử lý form-data
 
 // Routes
 app.use("/api/users", require("./app/routes/userRoutes"));
-
+app.use("/api/movies", require("./app/routes/movieRoutes"));
 // Middleware xử lý lỗi
 app.use(errorMiddleware);
 
