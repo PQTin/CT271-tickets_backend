@@ -94,7 +94,7 @@ exports.deleteMovie = async (req, res, next) => {
       return next(new ApiError(404, "Không tìm thấy phim"));
     }
     await movie.destroy();
-    res.json({ message: "Xóa phim thành công" });
+    res.json({ success: true, message: "Xóa phim thành công" });
   } catch (error) {
     next(new ApiError(500, "Lỗi khi xóa phim"));
   }
