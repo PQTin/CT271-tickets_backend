@@ -42,6 +42,11 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
+      status: {
+        type: Sequelize.ENUM("unused", "used", "expired"),
+        allowNull: false,
+        defaultValue: "unused", // Mặc định khi đặt vé là "unused"
+      },
       created_at: {
         type: Sequelize.DATE,
         defaultValue: Sequelize.NOW,
