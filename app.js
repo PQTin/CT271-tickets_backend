@@ -17,6 +17,7 @@ app.use("/api/users", require("./app/routes/userRoutes"));
 app.use("/api/movies", require("./app/routes/movieRoutes"));
 app.use("/api/rooms", require("./app/routes/roomSeatRoutes"));
 app.use("/api/showtimes", require("./app/routes/showtimeRoutes"));
+app.use("/api/tickets", require("./app/routes/ticketRoutes"));
 // Middleware xử lý lỗi
 app.use(errorMiddleware);
 
