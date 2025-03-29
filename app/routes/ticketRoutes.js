@@ -4,6 +4,7 @@ const {
   getAllTickets,
   cancelTicket,
   deleteTicket,
+  bookTicket,
 } = require("../controllers/ticketController");
 const { verifyToken, isAdmin } = require("../middlewares/authMiddlewares");
 

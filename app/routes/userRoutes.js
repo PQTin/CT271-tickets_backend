@@ -5,22 +5,22 @@ const {
   getCurrentUser,
   getUsersByRole,
   adminRegister,
+  updateUser,
+  deleteUser,
 } = require("../controllers/userController");
 const { verifyToken, isAdmin } = require("../middlewares/authMiddlewares");
+const { uploadAvatar } = require("../middlewares/upload");
 
 const router = express.Router();
 
-// Đăng ký (yêu cầu token nếu tạo admin)
-router.post("/adminRegister", verifyToken, adminRegister);
-
 router.post("/register", register);
-// Đăng nhập
 router.post("/login", login);
-
-// Lấy thông tin người dùng hiện tại (yêu cầu xác thực)
 router.get("/me", verifyToken, getCurrentUser);
+router.put("/update", verifyToken, uploadAvatar, updateUser);
 
-// Lấy danh sách người dùng theo role (chỉ Admin mới xem được)
+router.post("/adminRegister", verifyToken, isAdmin, adminRegister);
 router.get("/role/:role", verifyToken, isAdmin, getUsersByRole);
+router.put("/update/:id", verifyToken, isAdmin, uploadAvatar, updateUser);
+router.delete("/delete/:id", verifyToken, isAdmin, deleteUser);
 
 module.exports = router;
