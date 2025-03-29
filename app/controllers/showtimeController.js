@@ -45,6 +45,7 @@ const createShowtime = async (req, res, next) => {
 };
 
 // Cập nhật suất chiếu
+// chú ý khi cập nhật ngày ảnh hưởng đến vé frontend nhớ kiểm tra ngày
 const updateShowtime = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -98,9 +99,63 @@ const deleteShowtime = async (req, res, next) => {
   }
 };
 
+// Lấy danh sách ghế trống của một suất chiếu
+const getAvailableSeats = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    // Kiểm tra suất chiếu có tồn tại không
+    const showtime = await Showtime.findByPk(id);
+    if (!showtime) {
+      throw new ApiError(404, "Suất chiếu không tồn tại");
+    }
+
+    // Lấy phòng chiếu của suất chiếu
+    const room = await Room.findByPk(showtime.room_id);
+    if (!room) {
+      throw new ApiError(404, "Phòng chiếu không tồn tại");
+    }
+
+    // Lấy danh sách tất cả ghế trong phòng
+    const allSeats = await Seat.findAll({
+      where: { room_id: room.id },
+      attributes: ["id", "seat_number"],
+    });
+
+    if (allSeats.length === 0) {
+      throw new ApiError(404, "Không có ghế nào trong phòng chiếu này");
+    }
+
+    // Lấy danh sách ghế đã đặt (trừ vé có trạng thái "refunded")
+    const bookedSeats = await Ticket.findAll({
+      where: {
+        showtime_id: id,
+        status: ["unused", "used", "expired"], // Không tính ghế đã hoàn tiền
+      },
+      attributes: ["seat_id"],
+    });
+
+    const bookedSeatIds = bookedSeats.map((ticket) => ticket.seat_id);
+
+    // Lọc ra ghế trống
+    const availableSeats = allSeats.filter(
+      (seat) => !bookedSeatIds.includes(seat.id)
+    );
+
+    res.json({
+      success: true,
+      message: "Lấy danh sách ghế trống thành công",
+      data: availableSeats,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getAllShowtimes,
   createShowtime,
   updateShowtime,
   deleteShowtime,
+  getAvailableSeats,
 };

@@ -43,7 +43,7 @@ module.exports = (sequelize, Sequelize) => {
         defaultValue: false,
       },
       status: {
-        type: Sequelize.ENUM("unused", "used", "expired"),
+        type: Sequelize.ENUM("unused", "used", "expired", "refunded"),
         allowNull: false,
         defaultValue: "unused", // Mặc định khi đặt vé là "unused"
       },
