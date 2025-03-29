@@ -3,7 +3,6 @@ const jwt = require("jsonwebtoken");
 const { User, Ticket } = require("../models");
 const { Op } = require("sequelize");
 const ApiError = require("../utils/apiError");
-const { uploadAvatar } = require("../middlewares/upload");
 const path = require("path");
 const fs = require("fs");
 
@@ -108,7 +107,14 @@ exports.login = async (req, res, next) => {
     const token = jwt.sign({ id: user.id, role: user.role }, env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    res.json({ success: true, message: "Đăng nhập thành công", token, user });
+    const role = user.role;
+    res.json({
+      success: true,
+      message: "Đăng nhập thành công",
+      token,
+      user,
+      role,
+    });
   } catch (error) {
     next(error);
   }
