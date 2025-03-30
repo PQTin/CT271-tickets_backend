@@ -27,6 +27,12 @@ const roomController = {
           new ApiError(400, "Tên phòng và số ghế không được để trống")
         );
       }
+      const existingRoom = await Room.findOne({ where: { name } });
+      if (existingRoom) {
+        return next(
+          new ApiError(400, "Tên phòng đã tồn tại, vui lòng chọn tên khác")
+        );
+      }
 
       const room = await Room.create({ name, total_seats });
       const seats = [];
