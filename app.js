@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 const path = require("path");
 // Cấu hình để truy cập ảnh từ frontend
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "app", "uploads")));
 // Middleware
 app.use(cors());
 app.use(express.json()); // Xử lý JSON request body

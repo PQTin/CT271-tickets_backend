@@ -1,4 +1,4 @@
-const { Movie } = require("../models");
+const { Movie, Showtime, Ticket } = require("../models");
 const ApiError = require("../utils/apiError");
 const fs = require("fs");
 const path = require("path");
@@ -97,6 +97,26 @@ exports.deleteMovie = async (req, res, next) => {
     const movie = await Movie.findByPk(id);
     if (!movie) {
       return next(new ApiError(404, "Không tìm thấy phim"));
+    }
+    // Kiểm tra xem phim có suất chiếu chưa kết thúc không
+    const ongoingShowtime = await Showtime.findOne({
+      where: {
+        movie_id: id,
+        end_time: { [Op.gt]: new Date() }, // Suất chiếu chưa kết thúc
+      },
+    });
+
+    if (ongoingShowtime) {
+      return next(new ApiError(400, "Phim đang có suất chiếu, không thể xóa"));
+    }
+
+    // Tìm tất cả suất chiếu liên quan
+    const showtimes = await Showtime.findAll({ where: { movie_id: id } });
+    for (const showtime of showtimes) {
+      // Xóa tất cả vé của suất chiếu này trước
+      await Ticket.destroy({ where: { showtime_id: showtime.id } });
+      // Xóa suất chiếu
+      await showtime.destroy();
     }
 
     // Xóa ảnh khỏi thư mục
