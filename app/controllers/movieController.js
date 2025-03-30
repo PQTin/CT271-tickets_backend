@@ -1,5 +1,6 @@
 const { Movie, Showtime, Ticket } = require("../models");
 const ApiError = require("../utils/apiError");
+const { Op } = require("sequelize");
 const fs = require("fs");
 const path = require("path");
 // Lấy danh sách tất cả phim

@@ -1,5 +1,6 @@
 const { Showtime, Movie, Room, Ticket } = require("../models");
 const ApiError = require("../utils/apiError");
+const { Op } = require("sequelize");
 
 // Lấy tất cả suất chiếu
 const getAllShowtimes = async (req, res, next) => {
@@ -24,11 +25,45 @@ const createShowtime = async (req, res, next) => {
       throw new ApiError(400, "Vui lòng cung cấp đầy đủ thông tin");
     }
 
-    // Kiểm tra phim và phòng có tồn tại không
-    const movie = await Movie.findByPk(movie_id);
-    const room = await Room.findByPk(room_id);
-    if (!movie || !room) {
-      throw new ApiError(404, "Phim hoặc phòng không tồn tại");
+    if (start_time >= end_time) {
+      throw new ApiError(
+        400,
+        "Thời gian bắt đầu phải trước thời gian kết thúc"
+      );
+    }
+
+    // Kiểm tra trùng suất chiếu trong phòng
+    const overlappingShowtime = await Showtime.findOne({
+      where: {
+        room_id: room_id, // Cùng phòng chiếu
+        [Op.or]: [
+          {
+            start_time: { [Op.between]: [start_time, end_time] }, // Trùng giờ bắt đầu với suất cũ
+          },
+          {
+            end_time: { [Op.between]: [start_time, end_time] }, // Trùng giờ kết thúc với suất cũ
+          },
+          {
+            start_time: { [Op.lte]: start_time }, // Suất mới nằm trong suất cũ
+            end_time: { [Op.gte]: end_time },
+          },
+          {
+            start_time: { [Op.gte]: start_time }, // Suất cũ nằm trong suất mới
+            end_time: { [Op.lte]: end_time },
+          },
+          {
+            start_time: { [Op.lt]: start_time }, // Suất mới bắt đầu trước và kết thúc sau suất cũ
+            end_time: { [Op.gt]: end_time },
+          },
+        ],
+      },
+    });
+
+    if (overlappingShowtime) {
+      throw new ApiError(
+        400,
+        "Suất chiếu bị trùng giờ với suất khác trong cùng phòng!"
+      );
     }
 
     const showtime = await Showtime.create({
@@ -45,15 +80,52 @@ const createShowtime = async (req, res, next) => {
 };
 
 // Cập nhật suất chiếu
-// chú ý khi cập nhật ngày ảnh hưởng đến vé frontend nhớ kiểm tra ngày
+
 const updateShowtime = async (req, res, next) => {
   try {
     const { id } = req.params;
     const { start_time, end_time, price } = req.body;
+    if (start_time >= end_time) {
+      throw new ApiError(
+        400,
+        "Thời gian bắt đầu phải trước thời gian kết thúc"
+      );
+    }
 
     const showtime = await Showtime.findByPk(id);
-    if (!showtime) {
-      throw new ApiError(404, "Suất chiếu không tồn tại");
+    // Kiểm tra trùng suất chiếu (loại trừ suất chiếu hiện tại)
+    const overlappingShowtime = await Showtime.findOne({
+      where: {
+        room_id: showtime.room_id,
+        id: { [Op.ne]: id }, // Loại trừ chính suất chiếu đang cập nhật
+        [Op.or]: [
+          {
+            start_time: { [Op.between]: [start_time, end_time] }, // Trùng giờ bắt đầu với suất cũ
+          },
+          {
+            end_time: { [Op.between]: [start_time, end_time] }, // Trùng giờ kết thúc với suất cũ
+          },
+          {
+            start_time: { [Op.lte]: start_time }, // Suất mới nằm trong suất cũ
+            end_time: { [Op.gte]: end_time },
+          },
+          {
+            start_time: { [Op.gte]: start_time }, // Suất cũ nằm trong suất mới
+            end_time: { [Op.lte]: end_time },
+          },
+          {
+            start_time: { [Op.lt]: start_time }, // Suất mới bắt đầu trước và kết thúc sau suất cũ
+            end_time: { [Op.gt]: end_time },
+          },
+        ],
+      },
+    });
+
+    if (overlappingShowtime) {
+      throw new ApiError(
+        400,
+        "Suất chiếu bị trùng giờ với suất khác trong cùng phòng!"
+      );
     }
 
     await showtime.update({ start_time, end_time, price });
