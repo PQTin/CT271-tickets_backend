@@ -13,6 +13,9 @@ exports.adminRegister = async (req, res, next) => {
   try {
     const { username, email, phone, password, role } = req.body;
 
+    const avatar_url = req.file
+      ? `/uploads/avatars/${req.file.filename}`
+      : "/uploads/avatars/default.png";
     // Kiểm tra username đã tồn tại chưa
     const existingUsername = await User.findOne({ where: { username } });
     if (existingUsername)
@@ -47,7 +50,7 @@ exports.adminRegister = async (req, res, next) => {
       phone,
       password: hashedPassword,
       role: newRole,
-      avatar_url: "/uploads/avatars/default.png",
+      avatar_url,
     });
 
     res
@@ -260,7 +263,6 @@ exports.deleteUser = async (req, res) => {
       .status(200)
       .json({ success: true, message: "Xóa người dùng thành công!" });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({ message: "Lỗi server!" });
+    next(error);
   }
 };

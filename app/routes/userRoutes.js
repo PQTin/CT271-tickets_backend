@@ -18,7 +18,13 @@ router.post("/login", login);
 router.get("/me", verifyToken, getCurrentUser);
 router.put("/update", verifyToken, uploadAvatar, updateUser);
 
-router.post("/adminRegister", verifyToken, isAdmin, adminRegister);
+router.post(
+  "/adminRegister",
+  verifyToken,
+  isAdmin,
+  uploadAvatar,
+  adminRegister
+);
 router.get("/role/:role", verifyToken, isAdmin, getUsersByRole);
 router.put("/update/:id", verifyToken, isAdmin, uploadAvatar, updateUser);
 router.delete("/delete/:id", verifyToken, isAdmin, deleteUser);
