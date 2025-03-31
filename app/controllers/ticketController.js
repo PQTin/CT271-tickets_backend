@@ -1,10 +1,38 @@
-const { Ticket } = require("../models");
+const { Ticket, Showtime, Seat, Room, User, Movie } = require("../models");
 const ApiError = require("../utils/apiError");
 
 // Lấy tất cả vé
 exports.getAllTickets = async (req, res, next) => {
   try {
-    const tickets = await Ticket.findAll();
+    const tickets = await Ticket.findAll({
+      include: [
+        {
+          model: User,
+          attributes: ["email"],
+        },
+        {
+          model: Seat,
+          attributes: ["seat_number"],
+          include: [
+            {
+              model: Room,
+              attributes: ["name"],
+            },
+          ],
+        },
+        {
+          model: Showtime,
+          attributes: ["start_time", "end_time"],
+          include: [
+            {
+              model: Movie,
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
+
     res.json({ success: true, data: tickets });
   } catch (error) {
     next(error);
@@ -15,7 +43,35 @@ exports.getAllTickets = async (req, res, next) => {
 exports.getUserTickets = async (req, res, next) => {
   try {
     const userId = req.user.id;
-    const tickets = await Ticket.findAll({ where: { user_id: userId } });
+    const tickets = await Ticket.findAll({
+      where: { user_id: userId },
+      include: [
+        {
+          model: User,
+          attributes: ["email"],
+        },
+        {
+          model: Seat,
+          attributes: ["seat_number"],
+          include: [
+            {
+              model: Room,
+              attributes: ["name"],
+            },
+          ],
+        },
+        {
+          model: Showtime,
+          attributes: ["start_time", "end_time"],
+          include: [
+            {
+              model: Movie,
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
     res.json({ success: true, data: tickets });
   } catch (error) {
     next(error);
@@ -82,6 +138,32 @@ exports.deleteTicket = async (req, res, next) => {
 
     await ticket.destroy();
     res.json({ success: true, message: "Vé đã được xóa." });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Cập nhật trạng thái vé từ 'unused' sang 'used'
+exports.updateTicketStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const ticket = await Ticket.findByPk(id);
+    if (!ticket) return next(new ApiError(404, "Vé không tồn tại."));
+
+    if (ticket.status !== "unused") {
+      return next(new ApiError(400, "Chỉ có thể cập nhật vé chưa sử dụng."));
+    }
+
+    ticket.status = "used";
+    ticket.is_used = true;
+    await ticket.save();
+
+    res.json({
+      success: true,
+      message: "Trạng thái vé đã được cập nhật.",
+      data: ticket,
+    });
   } catch (error) {
     next(error);
   }
