@@ -35,9 +35,10 @@ const roomController = {
       }
 
       const room = await Room.create({ name, total_seats });
+      const roomPrefix = name.split(" ")[1];
       const seats = [];
       for (let i = 1; i <= total_seats; i++) {
-        seats.push({ room_id: room.id, seat_number: `${name}${i}` });
+        seats.push({ room_id: room.id, seat_number: `${roomPrefix}${i}` });
       }
       await Seat.bulkCreate(seats);
 
