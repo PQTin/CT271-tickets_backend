@@ -6,10 +6,7 @@ const { Op } = require("sequelize");
 const getAllShowtimes = async (req, res, next) => {
   try {
     const showtimes = await Showtime.findAll({
-      include: [
-        { model: Movie, attributes: ["name", "genre", "duration"] },
-        { model: Room, attributes: ["name"] },
-      ],
+      include: [{ model: Movie }, { model: Room, attributes: ["name"] }],
     });
     res.json({ success: true, data: showtimes });
   } catch (error) {

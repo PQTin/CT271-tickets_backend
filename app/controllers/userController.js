@@ -101,16 +101,21 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ where: { username } });
-    if (!user) return next(new ApiError(401, "Tài khoản không tồn tại."));
+    const users = await User.findOne({ where: { username } });
+    if (!users) return next(new ApiError(401, "Tài khoản không tồn tại."));
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, users.password);
     if (!isMatch) return next(new ApiError(401, "Mật khẩu không đúng."));
 
-    const token = jwt.sign({ id: user.id, role: user.role }, env.JWT_SECRET, {
+    const token = jwt.sign({ id: users.id, role: users.role }, env.JWT_SECRET, {
       expiresIn: "1d",
     });
-    const role = user.role;
+    const role = users.role;
+
+    const user = {
+      username: users.username,
+      avatar_url: users.avatar_url,
+    };
     res.json({
       success: true,
       message: "Đăng nhập thành công",
