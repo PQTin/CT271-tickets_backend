@@ -1,4 +1,4 @@
-const { Movie, Showtime, Ticket } = require("../models");
+const { Movie, Showtime, Ticket, Room } = require("../models");
 const ApiError = require("../utils/apiError");
 const { Op } = require("sequelize");
 const fs = require("fs");
@@ -14,6 +14,43 @@ exports.getAllMovies = async (req, res, next) => {
     });
   } catch (error) {
     next(new ApiError(500, "Lỗi khi lấy danh sách phim"));
+  }
+};
+// Lấy thông tin phim theo id và kèm theo danh sách suất chiếu
+exports.getMovieById = async (req, res, next) => {
+  const { id } = req.params; // Lấy id phim từ tham số request
+
+  try {
+    const movie = await Movie.findOne({
+      where: { id },
+      include: [
+        {
+          model: Showtime,
+          as: "Showtimes",
+          required: false,
+          include: [
+            {
+              model: Room,
+              as: "Room",
+              attributes: ["name"],
+            },
+          ],
+        },
+      ],
+    });
+
+    // Nếu không tìm thấy phim, trả về lỗi
+    if (!movie) {
+      return next(new ApiError(404, "Phim không tồn tại"));
+    }
+
+    res.json({
+      success: true,
+      message: "Lấy thông tin phim thành công",
+      data: movie,
+    });
+  } catch (error) {
+    next(new ApiError(500, "Lỗi khi lấy thông tin phim"));
   }
 };
 
