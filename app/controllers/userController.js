@@ -113,6 +113,7 @@ exports.login = async (req, res, next) => {
     const role = users.role;
 
     const user = {
+      user_id: users.id,
       username: users.username,
       avatar_url: users.avatar_url,
     };

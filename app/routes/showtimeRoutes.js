@@ -4,7 +4,7 @@ const {
   createShowtime,
   updateShowtime,
   deleteShowtime,
-  getAvailableSeats,
+  getSeats,
 } = require("../controllers/showtimeController");
 const { verifyToken, isAdmin } = require("../middlewares/authMiddlewares");
 
@@ -15,5 +15,5 @@ router.post("/create", verifyToken, isAdmin, createShowtime);
 router.put("/update/:id", verifyToken, isAdmin, updateShowtime);
 router.delete("/delete/:id", verifyToken, isAdmin, deleteShowtime);
 
-router.get("/:id", getAvailableSeats);
+router.get("/seat/:id", getSeats);
 module.exports = router;

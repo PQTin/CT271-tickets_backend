@@ -1,4 +1,4 @@
-const { Showtime, Movie, Room, Ticket } = require("../models");
+const { Showtime, Movie, Room, Ticket, Seat } = require("../models");
 const ApiError = require("../utils/apiError");
 const { Op } = require("sequelize");
 
@@ -168,8 +168,8 @@ const deleteShowtime = async (req, res, next) => {
   }
 };
 
-// Lấy danh sách ghế trống của một suất chiếu
-const getAvailableSeats = async (req, res, next) => {
+// Lấy danh sách ghế  của một suất chiếu
+const getSeats = async (req, res, next) => {
   try {
     const { id } = req.params;
 
@@ -201,20 +201,28 @@ const getAvailableSeats = async (req, res, next) => {
         showtime_id: id,
         status: ["unused", "used", "expired"], // Không tính ghế đã hoàn tiền
       },
-      attributes: ["seat_id"],
+      attributes: ["seat_id", "user_id"],
     });
 
     const bookedSeatIds = bookedSeats.map((ticket) => ticket.seat_id);
 
-    // Lọc ra ghế trống
-    const availableSeats = allSeats.filter(
-      (seat) => !bookedSeatIds.includes(seat.id)
-    );
+    // Thêm trạng thái cho từng ghế
+    const seatsWithStatus = allSeats.map((seat) => {
+      const bookedTicket = bookedSeats.find(
+        (ticket) => ticket.seat_id === seat.id
+      );
+      return {
+        id: seat.id,
+        seat_number: seat.seat_number,
+        status: bookedSeatIds.includes(seat.id) ? "not empty" : "empty", // Trạng thái ghế
+        user_id: bookedTicket ? bookedTicket.user_id : null,
+      };
+    });
 
     res.json({
       success: true,
       message: "Lấy danh sách ghế trống thành công",
-      data: availableSeats,
+      data: seatsWithStatus,
     });
   } catch (error) {
     next(error);
@@ -226,5 +234,5 @@ module.exports = {
   createShowtime,
   updateShowtime,
   deleteShowtime,
-  getAvailableSeats,
+  getSeats,
 };
