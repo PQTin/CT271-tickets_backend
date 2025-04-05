@@ -15,7 +15,7 @@ router.get("/", verifyToken, isAdmin, getAllTickets);
 router.get("/user", verifyToken, getUserTickets);
 router.post("/book", verifyToken, bookTicket);
 router.put("/cancel/:id", verifyToken, cancelTicket);
-router.delete("/delete/:id", verifyToken, isAdmin, deleteTicket);
+router.delete("/delete/:id", verifyToken, deleteTicket);
 router.put("/update/:id", verifyToken, isAdmin, updateTicketStatus);
 
 module.exports = router;

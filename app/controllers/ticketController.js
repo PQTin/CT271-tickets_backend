@@ -66,7 +66,7 @@ exports.getUserTickets = async (req, res, next) => {
           include: [
             {
               model: Movie,
-              attributes: ["name"],
+              attributes: ["name", "poster_url"],
             },
           ],
         },
