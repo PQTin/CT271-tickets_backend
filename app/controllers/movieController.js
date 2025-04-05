@@ -32,7 +32,7 @@ exports.getMovieById = async (req, res, next) => {
             {
               model: Room,
               as: "Room",
-              attributes: ["name"],
+              attributes: ["name", "total_seats"],
             },
           ],
         },
@@ -42,6 +42,17 @@ exports.getMovieById = async (req, res, next) => {
     // Nếu không tìm thấy phim, trả về lỗi
     if (!movie) {
       return next(new ApiError(404, "Phim không tồn tại"));
+    }
+    // Lấy số ghế đã đặt cho từng suất chiếu trong danh sách Showtimes
+    for (const showtime of movie.Showtimes) {
+      const bookedSeats = await Ticket.count({
+        where: {
+          showtime_id: showtime.id,
+          status: ["unused", "used", "expired"], // Tính các ghế đã được đặt
+        },
+      });
+      // Thêm số ghế đã đặt vào mỗi suất chiếu
+      showtime.setDataValue("booked_seats", bookedSeats);
     }
 
     res.json({

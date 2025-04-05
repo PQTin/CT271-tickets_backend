@@ -6,8 +6,23 @@ const { Op } = require("sequelize");
 const getAllShowtimes = async (req, res, next) => {
   try {
     const showtimes = await Showtime.findAll({
-      include: [{ model: Movie }, { model: Room, attributes: ["name"] }],
+      include: [
+        { model: Movie },
+        { model: Room, attributes: ["name", "total_seats"] },
+      ],
     });
+    // Duyệt qua từng suất chiếu và tính số ghế đã đặt
+    for (const showtime of showtimes) {
+      // Lấy số ghế đã đặt cho mỗi suất chiếu
+      const bookedSeats = await Ticket.count({
+        where: {
+          showtime_id: showtime.id,
+          status: ["unused", "used", "expired"], // Tính ghế chưa được hoàn lại
+        },
+      });
+      // Thêm số ghế đã đặt vào thông tin suất chiếu
+      showtime.setDataValue("booked_seats", bookedSeats);
+    }
     res.json({ success: true, data: showtimes });
   } catch (error) {
     next(error);
