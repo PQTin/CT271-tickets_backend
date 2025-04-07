@@ -12,7 +12,7 @@ CREATE TABLE movies (
     duration INT NOT NULL, -- Thời lượng phim (phút)
     release_date DATE NOT NULL,
     trailer_url VARCHAR(255),
-    poster_url VARCHAR(255),
+    poster_url VARCHAR(255)
 );
 
 INSERT INTO movies (name, description, genre, duration, release_date, trailer_url, poster_url) VALUES
@@ -24,7 +24,7 @@ INSERT INTO movies (name, description, genre, duration, release_date, trailer_ur
 ('Người Lắng Nghe: Lời Thì Thầm', 'Chuyện phim kể về việc bác sỹ tâm lý Tường Minh (Quang Sự) trị liệu cho nhà văn trẻ An Nhiên (Oanh Kiều) bị trầm cảm, dẫn đến rối loạn lo âu. Nhiên cho rằng bản thân đang bị một cô gái ám ảnh. Điều kỳ lạ là, cô gái mà Nhiên hay nhắc đến lại là nhân vật chính trong quyển truyện “Lời thì thầm”, một sáng tác đầu tay của Nhiên. Bằng các biện pháp chuyên môn, Tường Minh cố gắng giúp An Nhiên đối diện lại với những câu chuyện trong quá khứ. Anh hy vọng điều này sẽ giúp cô giải tỏa được những uẩn ức, từ đó vượt qua những ám ảnh và bắt đầu một cuộc sống mới. Tuy nhiên, trong quá trình nhập tâm để điều trị cho An Nhiên, Tường Minh cũng dần dần bị cuốn vào chính câu chuyện và những ám ảnh của Nhiên. Từ đây, Tường Minh thường xuyên gặp ác mộng, thấy ảo giác. Và đỉnh điểm là Minh cũng thấy bản thân cũng đang dần bị ám ảnh bởi một cô gái lạ.', 'Horror, Comedy, Romance', 120, '2022-03-04', 'https://youtu.be/b8cKMxApetA?si=xPY195rl9tC4gqsz', '/uploads/posters/poster6.jpg'),
 ('Vô Diện Sát Nhân', 'Câu chuyện xoay quanh một cô gái trẻ, ngày qua ngày bị ám ảnh bởi một tên sát nhân bí ẩn xuất hiện trong ánh màn đêm. Tình tiết phim thắt chặt mỗi lần cô gặp phải sự xuất hiện của tên sát nhân đáng sợ. Liệu tên sát nhân này có thật sự tồn tại hay chỉ là một phần của tâm trí và trí tưởng tượng của cô gái? Câu hỏi này tạo nên một lớp màn che kín bí mật và làm nổi bật sự căng thẳng và kịch tính trong phim.', 'Horror, Psychological', 87, '2022-08-26', 'https://youtu.be/-ouomaBrDK4?si=Ws7g83dpOCcr1Tz9', '/uploads/posters/poster7.jpg'),
 ('Mười: Lời Nguyền Trở Lại', 'Bộ phim tường thuật một câu chuyện bí ẩn và kỳ quái xảy ra trong căn nhà của nhân vật chính, Linh Chi. Trong không gian ấy, những điều kỳ lạ và đáng sợ xuất hiện liên tục, làm nổi bật sự bí ẩn bao phủ căn nhà này. Một phần của những bí mật này bắt nguồn từ một lời nguyền đặc biệt, một lời nguyền đưa ra cho kẻ thứ ba.', 'Horror', 95, '2022-09-30', 'https://youtu.be/FQhA7--t2XE?si=6GQ3t06p0oWxR8H6', '/uploads/posters/poster8.jpg'),
-('Thanh Sói', 'Bộ phim là một bức tranh sống động về cuộc sống của những cô gái ở những nơi tối tăm và nghèo nàn của thành phố, bao gồm các khu ổ chuột, các vũ trường sôi động và những ngõ tối ẩn mình. Trong thế giới này, Thanh Sói nổi lên như một nữ trùm mạnh mẽ và từ đây câu chuyện bắt đầu trải qua nhiều biến cố, rắc rối. Cuộc hành trình của các nhân vật sẽ phản ánh sự đấu tranh, lòng kiên nhẫn và lòng dũng cảm của cô trong cuộc sống đầy khó khăn.', 'Action, Psychological', 109, '2022-23-12', 'https://youtu.be/nL4LorD2Kik?si=tdmlsCoVemwDkG54', '/uploads/posters/poster9.jpg'),
+('Thanh Sói', 'Bộ phim là một bức tranh sống động về cuộc sống của những cô gái ở những nơi tối tăm và nghèo nàn của thành phố, bao gồm các khu ổ chuột, các vũ trường sôi động và những ngõ tối ẩn mình. Trong thế giới này, Thanh Sói nổi lên như một nữ trùm mạnh mẽ và từ đây câu chuyện bắt đầu trải qua nhiều biến cố, rắc rối. Cuộc hành trình của các nhân vật sẽ phản ánh sự đấu tranh, lòng kiên nhẫn và lòng dũng cảm của cô trong cuộc sống đầy khó khăn.', 'Action, Psychological', 109, '2022-12-23', 'https://youtu.be/nL4LorD2Kik?si=tdmlsCoVemwDkG54', '/uploads/posters/poster9.jpg'),
 ('Móng Vuốt', 'Chuyện phim xoay quanh nhóm bạn chơi thân với nhau từ thời trung học. Nhằm kỷ niệm cột mốc 10 năm gắn bó, cả hội quyết định rời xa phố thị, tìm đến khu rừng vùng ngoại ô “đổi gió”. Tiếc rằng, chuyến đi dã ngoại tưởng chừng đáng nhớ ấy bỗng chốc trở thành cơn ác mộng kinh hoàng, khi họ bắt gặp ánh mắt của một sinh vật nguy hiểm đang rình rập trong bóng tối.', 'Horror, Psychological', 115, '2024-06-07', 'https://youtu.be/uVuARLQdC8Y?si=3Q1L-TJTsnnXeW53', '/uploads/posters/poster10.jpg'),
 ('Maika - Cô Gái Đến Từ Hành Tinh Khác', 'Bộ phim đặc sắc này kể về một tình bạn trong sáng và đầy xúc động giữa hai đứa trẻ, Hùng và Maika, hai người thuộc hai hành tinh khác nhau. Nếu Hùng là cậu bé với trái tim tan vỡ sau những trải nghiệm đau thương, trong khi Maika là cô bé đến từ một hành tinh xa lạ, đã xuất hiện như một thiên thần hộ mệnh trong cuộc sống của cậu. Maika đã giúp Hùng chữa lành những vết thương lòng, đánh thức lại niềm tin và khả năng yêu thương trong trái tim của cậu.', 'Children, Comedy', 105, '2022-05-27', 'https://youtu.be/mOH-VKJBsh8?si=IG5AmLAP0GG8mKGa', '/uploads/posters/poster11.jpg'),
 ('Chuyện Ma Gần Nhà', 'Phim chứa đựng ba câu chuyện "bắt ma" khác nhau, mỗi câu chuyện tiết lộ một mảng sự thật kinh hoàng mà người xem sẽ không thể dự đoán trước được. Những tình tiết đan xen và sự kết hợp giữa hình ảnh đẹp và âm thanh ám ảnh làm cho Chuyện Ma Gần Nhà trở thành một tác phẩm kinh dị đáng xem của điện ảnh Việt Nam. Đây là một lựa chọn thú vị cho những ai yêu thích thể loại kinh dị và muốn tận hưởng những phút giây căng thẳng và rùng rợn trên màn ảnh rạp.', 'Horror, Psychological', 105, '2022-02-11', 'https://youtu.be/nFeKDjyeP2M?si=c1LtuVJtCb9pYofJ', '/uploads/posters/poster12.jpg'),
@@ -56,6 +56,15 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     avatar_url VARCHAR(255),
     role ENUM('admin', 'client') NOT NULL DEFAULT 'client'
+);
+INSERT INTO users (username, password, phone, email, avatar_url, role)
+VALUES (
+    'admin',
+    '$2b$10$OMYfQv3l3OQrTejhxALfJ.Hc/El8uF7lOEpDHDeZ0pRxVtcr5XICm',
+    '0921212276',
+    'tin@example.com',
+    '/uploads/avatars/default.png',
+    'admin'
 );
 
 
