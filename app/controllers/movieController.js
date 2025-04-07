@@ -28,6 +28,11 @@ exports.getMovieById = async (req, res, next) => {
           model: Showtime,
           as: "Showtimes",
           required: false,
+          where: {
+            end_time: {
+              [Op.gt]: new Date(), // Lọc những suất chiếu chưa kết thúc
+            },
+          },
           include: [
             {
               model: Room,
